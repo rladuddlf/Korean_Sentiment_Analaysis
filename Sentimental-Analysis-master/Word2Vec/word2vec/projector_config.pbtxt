@@ -1,0 +1,4 @@
+embeddings {
+  tensor_name: "embedding"
+  metadata_path: "C:\\Users\\USER\\PycharmProjects\\Sentimental-Analysis-master\\Sentimental-Analysis-master\\Word2Vec\\metadata.tsv"
+}

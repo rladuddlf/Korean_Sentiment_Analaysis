@@ -1,0 +1,57 @@
+/*jslint devel: true */
+/* eslint-disable no-console */
+/*eslint no-undef: "error"*/
+/*eslint-env node*/
+var http = require('http');
+var fs = require('fs');
+
+// 파이썬 실행
+var {PythonShell} = require('python-shell');
+var options = {
+  mode: 'text',
+  encoding: 'utf8',
+  pythonOptions: ['-u'],
+  scriptPath: '',
+  args: ['hello world'],
+  pythonPath: 'C:\\Python27'
+};
+
+// 웹서버 객체 생성
+var server = http.createServer();
+
+// 웹서버 시작, 3000번 포트 접근
+var port = 3000;
+server.listen(port, function() {
+   console.log('웹 서버 시작 : %d', port);
+});
+
+// 클라이언트 연결 이벤트 처리
+server.on('connection', function(socket) {
+    var addr = socket.address();
+    console.log('client 접속 : %s, %d', addr.address, addr.port);
+});
+
+// 클라이언트 요청 이벤트 처리
+server.on('request', function(req, res) {
+    console.log('client 요청 들어옴')
+    //console.dir(req)
+//    var filename = 'image.png';
+//    fs.readFile(filename, function(err, data){
+//        res.writeHead(200, {"Content-Type": "image/png"});
+//        res.write(data);
+//        res.end();
+//    });
+   // 200: 응답 성공, text/html: html문서
+   PythonShell.run('Grade_review.py', options, function(err, result){
+      res.writeHead(200, {'Content-Type': 'text/html'});
+       // end: 응답 본문을 작성합니다.
+       res.end(result.toString());
+      console.log('끝');
+   })
+    
+});
+
+// 서버 종료 이벤트 처리
+server.on('close', function() {
+    console.log('서버 종료');
+});
